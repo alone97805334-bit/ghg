@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الدخول | Cyberpunk Access</title>
+    
+    <!-- مكتبة التصميم Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- خط تجوال العصري -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body { 
+            font-family: 'Tajawal', sans-serif;
+            /* تم وضع رابط الصورة المباشر هنا */
+            background-image: url('https://images.wallpapersden.com/image/download/cyberpunk-room-pixel-art_bW1paGmUmZqaraWkpJRmZ21lrWxnZQ.jpg');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+            background-color: #0b0f19;
+        }
+
+        /* كارت زجاجي داكن وتأثير الغبش */
+        .glass-card {
+            background: rgba(10, 15, 29, 0.72);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(34, 211, 238, 0.25);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(6, 182, 212, 0.15);
+        }
+
+        /* توهج النيون لحقول الإدخال */
+        .neon-input:focus {
+            box-shadow: 0 0 15px rgba(34, 211, 238, 0.4);
+            border-color: #22d3ee;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 relative selection:bg-cyan-500 selection:text-black">
+
+    <!-- طبقة إعتام ناعمة لعزل الكارت عن تفاصيل الخلفية -->
+    <div class="fixed inset-0 bg-black/45 pointer-events-none"></div>
+
+    <!-- كارت تسجيل الدخول -->
+    <div class="glass-card p-8 sm:p-10 rounded-2xl w-full max-w-md relative z-10 text-white">
+        
+        <!-- أيقونة القفل النيون -->
+        <div class="flex justify-center mb-6">
+            <div class="w-14 h-14 rounded-full bg-cyan-950/70 border border-cyan-400/40 flex items-center justify-center shadow-[0_0_20px_rgba(6,182,212,0.35)]">
+                <svg class="w-7 h-7 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                </svg>
+            </div>
+        </div>
+
+        <h2 id="form-title" class="text-3xl font-black text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400 mb-2">
+            تسجيل الدخول
+        </h2>
+        <p class="text-xs text-center text-cyan-200/60 mb-6 tracking-wide">أهلاً بك في نظام التحكم والمصادقة</p>
+
+        <!-- صندوق التنبيهات والأخطاء -->
+        <div id="alert-box" class="hidden mb-4 p-3 rounded-xl text-xs font-semibold text-center border transition-all duration-300"></div>
+
+        <form id="auth-form" class="space-y-4">
+            <div>
+                <label class="block text-xs font-semibold text-cyan-200 mb-1.5 mr-1">البريد الإلكتروني</label>
+                <input type="email" id="email" required placeholder="user@terminal.net" 
+                       class="neon-input w-full px-4 py-2.5 bg-black/60 border border-gray-700/80 rounded-xl text-cyan-100 placeholder-gray-500 text-sm focus:outline-none transition duration-200">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-cyan-200 mb-1.5 mr-1">كلمة المرور</label>
+                <input type="password" id="password" required placeholder="••••••••••••" 
+                       class="neon-input w-full px-4 py-2.5 bg-black/60 border border-gray-700/80 rounded-xl text-cyan-100 placeholder-gray-500 text-sm focus:outline-none transition duration-200">
+            </div>
+
+            <div class="flex justify-between items-center text-xs pt-1">
+                <button type="button" id="forgot-password" class="text-cyan-400 hover:text-cyan-300 transition duration-200">
+                    نسيت كلمة المرور؟
+                </button>
+            </div>
+
+            <!-- زر التأكيد النيون -->
+            <button type="submit" id="submit-btn" 
+                    class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-3 rounded-xl transition duration-300 shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] transform hover:-translate-y-0.5 mt-2">
+                دخول للنظام
+            </button>
+        </form>
+
+        <div class="relative my-6">
+            <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-700/60"></div></div>
+            <div class="relative flex justify-center text-xs"><span class="px-3 bg-[#0a0f1d] text-gray-400 rounded-full border border-gray-700/50">أو عبر</span></div>
+        </div>
+
+        <!-- زر جوجل الزجاجي -->
+        <button id="google-btn" class="w-full flex items-center justify-center gap-3 bg-white/5 hover:bg-white/10 border border-white/10 py-2.5 rounded-xl transition duration-200 text-sm font-semibold text-gray-200 hover:border-cyan-500/50">
+            <svg class="w-4 h-4" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            المتابعة باستخدام Google
+        </button>
+
+        <!-- التبديل بين الدخول والتسجيل الجديد -->
+        <p class="text-center text-xs text-gray-400 mt-6">
+            <span id="toggle-text">ليس لديك حساب بعد؟</span>
+            <button id="toggle-btn" class="text-cyan-400 font-bold hover:text-cyan-300 mr-1 transition underline decoration-cyan-500/40 underline-offset-4">إنشاء حساب جديد</button>
+        </p>
+    </div>
+
+    <!-- أكواد Firebase v10 والمنطق البرمجي -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword, 
+            createUserWithEmailAndPassword, 
+            signInWithPopup, 
+            GoogleAuthProvider,
+            sendPasswordResetEmail,
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // ضع إعدادات مشروعك الحقيقي هنا من Firebase Console
+        const firebaseConfig = {
+            apiKey: "ضع_API_KEY_الخاص_بك_هنا",
+            authDomain: "مشروعك.firebaseapp.com",
+            projectId: "معرف_مشروعك",
+            storageBucket: "مشروعك.appspot.com",
+            messagingSenderId: "xxxxxx",
+            appId: "xxxxxx"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        let isLoginMode = true;
+
+        const form = document.getElementById('auth-form');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const submitBtn = document.getElementById('submit-btn');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const toggleText = document.getElementById('toggle-text');
+        const formTitle = document.getElementById('form-title');
+        const forgotPassword = document.getElementById('forgot-password');
+        const googleBtn = document.getElementById('google-btn');
+        const alertBox = document.getElementById('alert-box');
+
+        // إظهار التنبيهات
+        function showAlert(msg, isError = true) {
+            alertBox.textContent = msg;
+            alertBox.className = `block mb-4 p-3 rounded-xl text-xs font-semibold text-center border backdrop-blur-md ${
+                isError 
+                ? 'bg-red-500/20 text-red-300 border-red-500/40 shadow-[0_0_15px_rgba(239,68,68,0.2)]' 
+                : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.2)]'
+            }`;
+        }
+
+        // تحويل أخطاء فايربيز لرسائل عربية
+        function getArabicError(code) {
+            switch(code) {
+                case 'auth/invalid-email': return 'البريد الإلكتروني المدخل غير صالح.';
+                case 'auth/user-not-found': return 'المستخدم غير موجود بالنظام.';
+                case 'auth/wrong-password': return 'كلمة المرور غير صحيحة.';
+                case 'auth/email-already-in-use': return 'هذا البريد مستخدم مسبقاً.';
+                case 'auth/weak-password': return 'كلمة المرور ضعيفة جداً (يجب أن لا تقل عن 6 خانات).';
+                case 'auth/popup-closed-by-user': return 'تم إغلاق نافذة المصادقة قبل الإكمال.';
+                case 'auth/invalid-credential': return 'بيانات الدخول غير صحيحة، يرجى التأكد.';
+                default: return 'حدث خطأ، يرجى إعادة المحاولة لاحقاً.';
+            }
+        }
+
+        // التبديل بين الشاشتين
+        toggleBtn.addEventListener('click', () => {
+            isLoginMode = !isLoginMode;
+            formTitle.textContent = isLoginMode ? 'تسجيل الدخول' : 'إنشاء حساب جديد';
+            submitBtn.textContent = isLoginMode ? 'دخول للنظام' : 'تأكيد التسجيل';
+            toggleText.textContent = isLoginMode ? 'ليس لديك حساب بعد؟' : 'لديك حساب بالفعل؟';
+            toggleBtn.textContent = isLoginMode ? 'إنشاء حساب جديد' : 'تسجيل الدخول';
+            forgotPassword.style.display = isLoginMode ? 'block' : 'none';
+            alertBox.className = 'hidden';
+        });
+
+        // تنفيذ الدخول أو الإنشاء
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+
+            try {
+                if (isLoginMode) {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    showAlert('تمت المصادقة بنجاح! جاري التوجيه...', false);
+                } else {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                    showAlert('تم إنشاء الحساب بنجاح في النظام!', false);
+                }
+            } catch (error) {
+                showAlert(getArabicError(error.code));
+            }
+        });
+
+        // تسجيل الدخول بجوجل
+        googleBtn.addEventListener('click', async () => {
+            try {
+                await signInWithPopup(auth, provider);
+                showAlert('تم تسجيل الدخول بحساب Google بنجاح!', false);
+            } catch (error) {
+                showAlert(getArabicError(error.code));
+            }
+        });
+
+        // استعادة كلمة المرور
+        forgotPassword.addEventListener('click', async () => {
+            const email = emailInput.value.trim();
+            if (!email) {
+                showAlert('يرجى كتابة البريد الإلكتروني أولاً في الحقل المخصص.');
+                return;
+            }
+            try {
+                await sendPasswordResetEmail(auth, email);
+                showAlert('تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني!', false);
+            } catch (error) {
+                showAlert(getArabicError(error.code));
+            }
+        });
+
+        // فحص الجلسة الحالية
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log("المستخدم مسجل الآن:", user.email);
+            }
+        });
+    </script>
+</body>
+</html>
